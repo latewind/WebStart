@@ -12,6 +12,7 @@ public class SystemErrorController {
 	
 	@RequestMapping("/system/error/not.html")
 	public String notHaveFunction(){
+		//
 		
 		return "admin/error/not";
 	}
