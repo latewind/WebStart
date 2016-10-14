@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-5-13 16:11:27 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="com.latewind.domain.Materials" table="materials" catalog="erp_al" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="45" />
+        </property>
+        <property name="model" type="string">
+            <column name="model" length="45" />
+        </property>
+        <property name="num" type="java.lang.Integer">
+            <column name="num" />
+        </property>
+        <property name="unit" type="string">
+            <column name="unit" length="45" />
+        </property>
+        <property name="prince" type="string">
+            <column name="prince" length="45" />
+        </property>
+        <property name="totalprice" type="java.lang.Integer">
+            <column name="totalprice" />
+        </property>
+        <property name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+        </property>
+        <property name="applicantId" type="java.lang.Integer">
+            <column name="applicant_id" />
+        </property>
+        <property name="sort" type="string">
+            <column name="sort" length="45">
+                <comment>&#214;&#214;&#192;&#224;</comment>
+            </column>
+        </property>
+        <property name="remark" type="string">
+            <column name="remark" length="45" />
+        </property>
+        <property name="userinfoId" type="int">
+            <column name="userinfo_id" not-null="true" />
+        </property>
+        
+          <property name="status" type="string">
+            <column name="status" length="45" />
+        </property>
+                  <property name="processesInfo" type="string">
+            <column name="processes_info" length="45" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

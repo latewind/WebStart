@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-5-30 19:15:41 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="com.latewind.domain.Msg" table="msg" catalog="erp_al" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="sender" class="com.latewind.bean.UserInfo" fetch="select">
+       	<column name="sender_id"></column>
+        </many-to-one>
+        <property name="title" type="string">
+            <column name="title" length="45" />
+        </property>
+        <property name="content" type="string">
+            <column name="content" length="65535" />
+        </property>
+        <property name="sendtime" type="date">
+            <column name="sendtime" length="10" />
+        </property>
+        <set name="receivers" table="msg_user" cascade="save-update" lazy="false">
+            <key>
+                <column name="msg_id" />
+            </key>
+            <many-to-many  column="user_id" class="com.latewind.bean.UserInfo" />
+        </set>
+    </class>
+</hibernate-mapping>

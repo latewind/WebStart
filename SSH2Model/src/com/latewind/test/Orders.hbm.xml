@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-3-19 21:34:12 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="com.latewind.test.Orders" table="orders" catalog="erp_al" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="userinfo" class="com.latewind.test.Userinfo" fetch="select">
+            <column name="chnname" not-null="true" />
+        </many-to-one>
+        <property name="orderno" type="string">
+            <column name="orderno" length="30" not-null="true" />
+        </property>
+        <property name="no" type="int">
+            <column name="no" not-null="true" />
+        </property>
+        <property name="customer" type="string">
+            <column name="customer" length="30" not-null="true" />
+        </property>
+        <property name="figureno" type="string">
+            <column name="figureno" length="20" not-null="true" />
+        </property>
+        <property name="mould" type="string">
+            <column name="mould" length="20" />
+        </property>
+        <property name="model" type="string">
+            <column name="model" length="20" not-null="true" />
+        </property>
+        <property name="length" type="int">
+            <column name="length" not-null="true" />
+        </property>
+        <property name="plancount" type="int">
+            <column name="plancount" not-null="true" />
+        </property>
+        <property name="weight" type="double">
+            <column name="weight" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="alloystate" type="string">
+            <column name="alloystate" length="10" not-null="true" />
+        </property>
+        <property name="deliverydate" type="date">
+            <column name="deliverydate" length="10" not-null="true" />
+        </property>
+        <property name="orderdate" type="date">
+            <column name="orderdate" length="10" not-null="true" />
+        </property>
+        <property name="remarks" type="string">
+            <column name="remarks" length="50" />
+        </property>
+        <property name="figure" type="binary">
+            <column name="figure" />
+        </property>
+    </class>
+</hibernate-mapping>

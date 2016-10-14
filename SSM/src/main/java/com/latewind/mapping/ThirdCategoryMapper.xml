@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.category.ThirdCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.ThirdCategory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="des" property="des" jdbcType="VARCHAR" />
+    <result column="sub_id" property="subId" jdbcType="INTEGER" />
+    
+       <association property="subCategory" javaType="com.latewind.pojo.SubCategory">
+    	    <id column="sid" property="id" jdbcType="INTEGER" />
+		    <result column="sname" property="name" jdbcType="VARCHAR" />
+		    <result column="sdes" property="des" jdbcType="VARCHAR" />  
+    </association>
+    
+    
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, name, des, sub_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select th.*,s.id sid,s.name sname ,s.des sdes from thirdcategory_t th,subcategory_t s where th.sub_id=s.id and th.id=#{id}
+  </select>
+  
+  
+  
+      <!-- 查找全部 -->
+   <select id="selectAllThird" resultMap="BaseResultMap" >
+   	SELECT th.*,s.id sid,s.name sname ,s.des sdes from thirdcategory_t th LEFT JOIN subcategory_t s ON th.sub_id=s.id ;
+  </select>
+  
+    <select id="selectByThirdName" resultMap="BaseResultMap"  >
+	select th.* from thirdcategory_t th where th.name=#{thirdName}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from thirdcategory_t
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.ThirdCategory" >
+    insert into thirdcategory_t (id, name, des, 
+      sub_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{des,jdbcType=VARCHAR}, 
+      #{subId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.ThirdCategory" >
+    insert into thirdcategory_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="des != null" >
+        des,
+      </if>
+      <if test="subId != null" >
+        sub_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="des != null" >
+        #{des,jdbcType=VARCHAR},
+      </if>
+      <if test="subId != null" >
+        #{subId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.ThirdCategory" >
+    update thirdcategory_t
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="des != null" >
+        des = #{des,jdbcType=VARCHAR},
+      </if>
+      <if test="subId != null" >
+        sub_id = #{subId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.ThirdCategory" >
+    update thirdcategory_t
+    set name = #{name,jdbcType=VARCHAR},
+      des = #{des,jdbcType=VARCHAR},
+      sub_id = #{subId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

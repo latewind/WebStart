@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.category.SubCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.SubCategory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="top_id" property="topId" jdbcType="INTEGER" />
+    <result column="des" property="des" jdbcType="VARCHAR" />
+    <association property="topCategory" javaType="com.latewind.pojo.TopCategory">
+    	    <id column="tid" property="id" jdbcType="INTEGER" />
+		    <result column="tname" property="name" jdbcType="VARCHAR" />
+		    <result column="tdes" property="des" jdbcType="VARCHAR" />  
+    </association>   
+    
+         <collection property="thirdCategories" ofType="com.latewind.pojo.ThirdCategory">  
+                <id column="thid" property="id" jdbcType="INTEGER" />
+			    <result column="thname" property="name" jdbcType="VARCHAR" />
+			    <result column="thsub_id" property="subId" jdbcType="INTEGER" />
+			    <result column="thdes" property="des" jdbcType="VARCHAR" /> 
+        </collection>
+    
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, top_id, des
+  </sql>
+  <!-- one to many 别名 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	select s.*,t.id tid,t.name tname,t.des tdes ,th.id thid,th.name thname,th.des thdes 
+	from subcategory_t s,topcategory_t t ,thirdcategory_t th where s.top_id=t.id and s.id=th.sub_id and s.id=#{id}
+  </select>
+  
+    <!-- 查找全部 -->
+   <select id="selectAllSub" resultMap="BaseResultMap" >
+	SELECT s.*,t.id tid,t.name tname,t.des tdes ,th.id thid,th.name thname,th.des thdes 
+	from subcategory_t s  left join topcategory_t t    ON s.top_id=t.id
+						  left join thirdcategory_t th ON  s.id=th.sub_id
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from subcategory_t
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.SubCategory" >
+    insert into subcategory_t (id, name, top_id, 
+      des)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{topId,jdbcType=INTEGER}, 
+      #{des,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.SubCategory" >
+    insert into subcategory_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="topId != null" >
+        top_id,
+      </if>
+      <if test="des != null" >
+        des,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="topId != null" >
+        #{topId,jdbcType=INTEGER},
+      </if>
+      <if test="des != null" >
+        #{des,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.SubCategory" >
+    update subcategory_t
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="topId != null" >
+        top_id = #{topId,jdbcType=INTEGER},
+      </if>
+      <if test="des != null" >
+        des = #{des,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.SubCategory" >
+    update subcategory_t
+    set name = #{name,jdbcType=VARCHAR},
+      top_id = #{topId,jdbcType=INTEGER},
+      des = #{des,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-3-19 21:34:12 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="com.latewind.test.Userinfo" table="userinfo" catalog="erp_al" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="username" type="string">
+            <column name="username" length="16" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="20" not-null="true" />
+        </property>
+        <property name="chnname" type="string">
+            <column name="chnname" length="10" not-null="true" />
+        </property>
+        <property name="profession" type="string">
+            <column name="profession" length="6" not-null="true" />
+        </property>
+        <property name="limit" type="string">
+            <column name="limit" length="10" not-null="true" />
+        </property>
+        <set name="orderses" table="orders" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="chnname" not-null="true" />
+            </key>
+            <one-to-many class="com.latewind.test.Orders" />
+        </set>
+    </class>
+</hibernate-mapping>

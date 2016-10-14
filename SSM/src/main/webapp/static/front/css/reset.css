@@ -1,0 +1,31 @@
+
+fieldset,img{border:0;}
+img{ vertical-align:top}
+ol,ul,li{list-style:none;}
+a{text-decoration:none; color:#222;}
+a:hover{color:#052299;}
+a:active{color:#052299;}
+
+
+
+/*= �������=*/
+.clear{clear: both; height:0px; line-height:0px; font-size:0px;}
+.clearfix:after { content: "."; display: block; height: 0;  clear: both; visibility: hidden;}
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+/* End hide from IE-mac */
+*+html .clearfix {min-height: 1%;}
+*html{zoom:expression(function(ele){ele.style.zoom = "1";document.execCommand("BackgroundImageCache",false,true)}
+(this))}
+
+/* ���Ҹ��� */
+.fl{ float:left;}
+.fr{ float:right}
+
+
+
+
+
+
+
+

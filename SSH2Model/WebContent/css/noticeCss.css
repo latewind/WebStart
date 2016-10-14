@@ -1,0 +1,51 @@
+html, body	{ height:100%; }
+        body { margin:0; padding:0; overflow:auto; }
+        #flashContent { display:none; }
+		#footer{clear:both;}
+
+		#wrapper{    border: 0 auto;
+					background-color:#F7F7F7;
+					box-shadow: 10px 5px 10px 10px #888888;
+					margin: 0 auto;
+					padding: 0;
+					text-align: left;
+					width: 1129px}
+		#header{border: 0 none;
+					float: left;
+					margin: 0 0 0 6px;
+					padding: 0;
+					 height: 9px;
+					width: 100%;}
+								
+		#leftbar{   background: transparent none repeat scroll 0 0;
+					border: 0 none;
+					float: left;
+					margin: 0 0 0 6px;
+					padding: 0;
+					width: 180px;}
+		#content{  background: transparent none repeat scroll 0 0;
+				    border: 0 none;
+				    float: left;
+				    margin: 0;
+				    padding: 0;
+				    width: 740px;}
+		
+		#rightbar {
+		    background: transparent none repeat scroll 0 0;
+		    border: 0 none;
+		    float: left;
+		    margin: 0;
+		    padding: 0;
+		    width: 180px;
+		}
+		ul li{
+		text-decoration:none;
+		list-style-type:decimal;
+		cursor:pointer;
+		}
+		.uldiv{
+			
+			height:100px;
+			overflow-y:scroll;
+			overflow-style:marquee-line;
+		}

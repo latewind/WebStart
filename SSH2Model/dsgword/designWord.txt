@@ -1,0 +1,14 @@
+
+
+
+
+
+
+
+公司公告
+数据库 table NoticeMsg
+
+标题       内容             		日期                         姓名    
+Title   content       publishdate			  chnname
+
+

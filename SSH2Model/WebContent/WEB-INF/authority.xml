@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<privilege>
+<action class="com.latewind.action.loginAction">
+<authority>admin</authority>
+<authority>plan</authority>
+<authority>sale</authority>
+</action>
+<action class="com.latewind.action.AddOrdersAction">
+<authority>admin</authority>
+<authority>sale</authority>
+</action>
+<action class="com.latewind.action.OrderAction">
+<authority>admin</authority>
+<authority>sale</authority>
+<authority>plan</authority>
+</action>
+
+
+
+
+</privilege>

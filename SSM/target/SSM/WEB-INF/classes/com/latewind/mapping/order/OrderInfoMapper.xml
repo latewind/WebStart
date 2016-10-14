@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.order.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.order.OrderInfo" >
+    <id column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="pay_method" property="payMethod" jdbcType="VARCHAR" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="delivery" property="delivery" jdbcType="VARCHAR" />
+    <result column="pack_count" property="packCount" jdbcType="INTEGER" />
+    <result column="complete_time" property="completeTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+   <!--  商品结果集 -->
+      <resultMap id="ProductBaseMap" type="com.latewind.pojo.product.ProductInfo" >
+    <id column="prt_id" property="prtId" jdbcType="INTEGER" />
+    <result column="prt_name" property="prtName" jdbcType="VARCHAR" />
+    <result column="describ" property="describ" jdbcType="VARCHAR" />
+    <result column="third_id" property="thirdId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="sell_count" property="sellCount" jdbcType="INTEGER" />
+    <result column="click_count" property="clickCount" jdbcType="INTEGER" />
+    <result column="pcreate_time" property="createTime" jdbcType="DATE" />
+    <result column="off_shelf" property="offShelf" jdbcType="INTEGER" />
+    <result column="prim_Img_id" property="primImgId" jdbcType="INTEGER" />
+           <association property="primImage" javaType="com.latewind.pojo.product.ProductImages">
+ 		  <id column="image_id" property="imageId" jdbcType="INTEGER" />
+   		 <result column="image_name" property="imageName" jdbcType="VARCHAR" />
+   		   <result column="iprt_id" property="prtId" jdbcType="INTEGER" />
+            </association>  
+  </resultMap> 
+  
+   <!-- 商品包结果集  cprt_id porder_id 别名  -->
+        <resultMap id="ProductPackResultMap" type="com.latewind.pojo.order.ProductPack" >
+    <id column="cart_product_id" property="cartProductId" jdbcType="INTEGER" />
+     <result column="cprt_id" property="prtId" jdbcType="INTEGER" />
+    <result column="corder_id" property="orderId" jdbcType="INTEGER" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+      <result column="deal_price" property="dealPrice" jdbcType="DECIMAL" />
+      <collection property="productInfo" ofType="com.latewind.pojo.product.ProductInfo" resultMap="ProductBaseMap"/>    
+  </resultMap>
+  	<!-- 订单结果集 -->
+    <resultMap id="OrderResultMap" type="com.latewind.pojo.order.OrderInfo" >
+    <id column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="pay_method" property="payMethod" jdbcType="VARCHAR" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="delivery" property="delivery" jdbcType="VARCHAR" />
+    <result column="pack_count" property="packCount" jdbcType="INTEGER" />
+    <result column="complete_time" property="completeTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+     <collection property="productPacks" ofType="com.latewind.pojo.order.ProductPack" resultMap="ProductPackResultMap"/>  
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    order_id, user_id, name, contact, address, order_status, pay_method, total_price, 
+    delivery, pack_count, complete_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_t
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+<!-- 根据用户ID来查找所有订单Base 基础数据 -->
+  <select id="selectByUserIdBase" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_t
+    where user_id = #{userId,jdbcType=INTEGER} 
+  </select>
+  
+  
+  <select id="selectOrderCountByUserId" resultType="java.lang.Integer" > 
+  select count(*) from order_t where user_id=#{userId}
+     <if test="orderStatus!=null">
+    AND order_status=#{orderStatus}
+    </if>
+  </select>
+
+
+  <select id="selectOrderIdByUserId" resultType="java.lang.Integer" >
+    select 
+    order_t.order_id
+    from order_t
+    where user_id = #{userId,jdbcType=INTEGER}
+    
+    <if test="orderStatus!=null">
+    AND order_status=#{orderStatus}
+    </if>
+    order by create_time desc
+     limit #{startPos} , #{step} 
+  </select>
+ 
+ 
+  
+  
+    <!-- 根据订单ID 批量 查找订单商品 -->
+  <select id="selectOrdersByOrderIdList" resultMap="OrderResultMap" parameterType="java.lang.Integer">
+    select o.* ,c.cart_product_id,c.prt_id cprt_id,c.quantity ,c.deal_price,
+		p.prt_id,p.prt_name,p.price,p.num,i.image_id,i.image_name ,i.prt_id iprt_id
+    from 
+    	order_t o inner join cart_product_t c  on o.order_id in 
+     <foreach collection="orderIdList" item="item"  open="(" separator="," close=")">  
+        #{item}  
+     </foreach>  	
+    	  and c.order_id=o.order_id
+    					 inner join product_t   p  on   p.prt_id=c.prt_id
+    					 inner join prt_images_t i  on i.image_id=p.prim_Img_id
+    
+    order by field
+    <foreach collection="orderIdList" item="item"  open="(o.order_id ," separator="," close=")">  
+        #{item}  
+     </foreach>					 
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_t
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.order.OrderInfo" >
+    insert into order_t (order_id, user_id, name, 
+      contact, address, order_status, 
+      pay_method, total_price, delivery, 
+      pack_count, complete_time, create_time
+      )
+    values (#{orderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{contact,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
+      #{payMethod,jdbcType=VARCHAR}, #{totalPrice,jdbcType=DECIMAL}, #{delivery,jdbcType=VARCHAR}, 
+      #{packCount,jdbcType=INTEGER}, #{completeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.order.OrderInfo" useGeneratedKeys="true" keyProperty="orderId">
+    insert into order_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="contact != null" >
+        contact,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="payMethod != null" >
+        pay_method,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="delivery != null" >
+        delivery,
+      </if>
+      <if test="packCount != null" >
+        pack_count,
+      </if>
+      <if test="completeTime != null" >
+        complete_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null" >
+        #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="delivery != null" >
+        #{delivery,jdbcType=VARCHAR},
+      </if>
+      <if test="packCount != null" >
+        #{packCount,jdbcType=INTEGER},
+      </if>
+      <if test="completeTime != null" >
+        #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateOrderStatus" >
+  update order_t 
+  SET order_status=#{orderStatus} where order_id=#{orderId}
+  </update>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.order.OrderInfo" >
+    update order_t
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null" >
+        pay_method = #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="delivery != null" >
+        delivery = #{delivery,jdbcType=VARCHAR},
+      </if>
+      <if test="packCount != null" >
+        pack_count = #{packCount,jdbcType=INTEGER},
+      </if>
+      <if test="completeTime != null" >
+        complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.order.OrderInfo" >
+    update order_t
+    set user_id = #{userId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      pay_method = #{payMethod,jdbcType=VARCHAR},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      delivery = #{delivery,jdbcType=VARCHAR},
+      pack_count = #{packCount,jdbcType=INTEGER},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,19 @@
+.title{
+	
+width:350px;	
+font-size:1.2em;
+font-weight: bold;
+
+	
+}
+.msgcontent , .sender{
+	
+	font-size:0.75em;
+	color:#c0c0c0;
+}
+
+.title a:hover{
+	
+	color:#00ff00;
+	
+}

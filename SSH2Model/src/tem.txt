@@ -1,0 +1,42 @@
+<bean id="userInfoDAOProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="userInfoDAO" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+
+
+
+<label>序号：<input type="text" name="no"></label>
+<label>客户：<input type="text" name="customer"></label>
+<label>图号：<input type="text" name="figureNo"></label>
+<label>模具号：<input type="text" name="mould"></label>
+<label>型号：<input type="text" name="model"></label>
+<label>定尺：<input type="text" name="length"></label>
+<label>计划数：<input type="text" name="planCount"></label>
+<label>重量：<input type="text" name="weight"></label>
+<label>合金状态：<input type="text" name="alloyState"></label>
+<label>交货期：<input type="text" name="deliveryDate"></label>
+<label>下单期：<input type="text" name="orderDate"></label>
+<label>备注：<input type="text" name="remarks"></label>
+<label>下单人：<input type="text" name="no"></label>
+<label>图纸：<input type="text" name="figureno"></label>
+
+
+
+
+
+
+	<td><a href="<s:url action="order/showFigureAction">  
+   				<s:param name="fid" value="{id}"></s:param> </s:url>" target="_blank" >查看图纸</a></td>

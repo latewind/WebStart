@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-5-5 21:53:57 by Hibernate Tools 4.3.1.Final -->
+<hibernate-mapping>
+    <class name="com.latewind.domain.Department" table="department" catalog="erp_al" optimistic-lock="version">
+        <id name="departmentId" type="java.lang.Integer">
+            <column name="department_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="leader" class="com.latewind.domain.Position" fetch="select">
+            <column name="leader_id" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="45" />
+        </property>
+        <property name="tel" type="string">
+            <column name="tel" length="45" />
+        </property>
+        <property name="func" type="string">
+            <column name="func" length="100" />
+        </property>
+        <set name="positions" table="position" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="department_id" />
+            </key>
+            <one-to-many class="com.latewind.domain.Position" />
+        </set>
+    </class>
+</hibernate-mapping>

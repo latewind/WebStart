@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.notice.AnnouncementMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.notice.Announcement" >
+    <id column="announ_id" property="announId" jdbcType="INTEGER" />
+    <result column="announ_title" property="announTitle" jdbcType="VARCHAR" />
+    <result column="announ_time" property="announTime" jdbcType="TIMESTAMP" />
+    <result column="announ_anchor" property="announAnchor" jdbcType="VARCHAR" />
+    <result column="display_status" property="displayStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.latewind.pojo.notice.Announcement" extends="BaseResultMap" >
+    <result column="announ_content" property="announContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    announ_id, announ_title, announ_time, announ_anchor, display_status
+  </sql>
+  <sql id="Blob_Column_List" >
+    announ_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from announ_t
+    where announ_id = #{announId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectCurAnnounce" resultMap="BaseResultMap">
+  select  <include refid="Base_Column_List" />
+  
+ from announ_t 
+  
+  where display_status=1 order by announ_time desc limit 7
+  
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from announ_t
+    where announ_id = #{announId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.notice.Announcement" >
+    insert into announ_t (announ_id, announ_title, announ_time, 
+      announ_anchor, display_status, announ_content
+      )
+    values (#{announId,jdbcType=INTEGER}, #{announTitle,jdbcType=VARCHAR}, #{announTime,jdbcType=TIMESTAMP}, 
+      #{announAnchor,jdbcType=VARCHAR}, #{displayStatus,jdbcType=INTEGER}, #{announContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.notice.Announcement" >
+    insert into announ_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="announId != null" >
+        announ_id,
+      </if>
+      <if test="announTitle != null" >
+        announ_title,
+      </if>
+      <if test="announTime != null" >
+        announ_time,
+      </if>
+      <if test="announAnchor != null" >
+        announ_anchor,
+      </if>
+      <if test="displayStatus != null" >
+        display_status,
+      </if>
+      <if test="announContent != null" >
+        announ_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="announId != null" >
+        #{announId,jdbcType=INTEGER},
+      </if>
+      <if test="announTitle != null" >
+        #{announTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="announTime != null" >
+        #{announTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="announAnchor != null" >
+        #{announAnchor,jdbcType=VARCHAR},
+      </if>
+      <if test="displayStatus != null" >
+        #{displayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="announContent != null" >
+        #{announContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.notice.Announcement" >
+    update announ_t
+    <set >
+      <if test="announTitle != null" >
+        announ_title = #{announTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="announTime != null" >
+        announ_time = #{announTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="announAnchor != null" >
+        announ_anchor = #{announAnchor,jdbcType=VARCHAR},
+      </if>
+      <if test="displayStatus != null" >
+        display_status = #{displayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="announContent != null" >
+        announ_content = #{announContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where announ_id = #{announId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.latewind.pojo.notice.Announcement" >
+    update announ_t
+    set announ_title = #{announTitle,jdbcType=VARCHAR},
+      announ_time = #{announTime,jdbcType=TIMESTAMP},
+      announ_anchor = #{announAnchor,jdbcType=VARCHAR},
+      display_status = #{displayStatus,jdbcType=INTEGER},
+      announ_content = #{announContent,jdbcType=LONGVARCHAR}
+    where announ_id = #{announId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.notice.Announcement" >
+    update announ_t
+    set announ_title = #{announTitle,jdbcType=VARCHAR},
+      announ_time = #{announTime,jdbcType=TIMESTAMP},
+      announ_anchor = #{announAnchor,jdbcType=VARCHAR},
+      display_status = #{displayStatus,jdbcType=INTEGER}
+    where announ_id = #{announId,jdbcType=INTEGER}
+  </update>
+</mapper>

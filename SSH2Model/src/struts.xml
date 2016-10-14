@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC  
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
+    "http://struts.apache.org/dtds/struts-2.0.dtd">  
+
+<struts>  
+  <constant name="struts.objectFactory" value="spring" />
+<!-- 开发者模式 -->
+  <constant name="struts.devmMode" value="true" />
+  <constant name="struts.action.extension" value="action" />
+<constant name="struts.multipart.maxSize" value="5000000000" /> 
+<constant name="struts.serve.static.browserCache" value="false" />
+
+<package name="Top"  extends="struts-default">          
+    <!-- Login interceptor config -->
+       <interceptors>
+        	<interceptor name="LoginInterceptor" class="com.latewind.interceptors.LoginInterceptor"/>
+	        <interceptor-stack name="mydefault">
+	             <interceptor-ref name="defaultStack" />
+	              <interceptor-ref name="LoginInterceptor" />
+	         </interceptor-stack>
+       </interceptors>    
+               <!-- 定义默认拦截器 -->
+        <default-interceptor-ref name="mydefault" />
+        		<!-- 默认Action -->
+         <default-action-ref name="LoginAction"></default-action-ref>
+        <!-- 定义全局处理结果 -->
+        <global-results>
+            <!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
+            <result name="login">/LoginPage.jsp</result>
+            <result name="error">/error.jsp</result> 
+            <result name="unavaiable">/Unavaiable.jsp</result> 
+        </global-results>
+        
+        <global-exception-mappings>
+  			<exception-mapping exception="java.lang.Exception" result="error" /> 
+  		</global-exception-mappings>      
+</package>  
+      
+      
+      
+       <!-- Login package -->
+    <package name="loginHello" extends="struts-default" namespace="/log">
+    
+    	<action name="IndexAction" class="IndexAction">
+    		<result name="success">/Home.jsp</result>
+    		<result name="login">/LoginPage.jsp</result>
+    	</action>
+    
+    	        <!-- 登录界面 -->
+        <action name="*Action"  class="LoginAction" method="{1}">
+        <result name="success">/Home.jsp</result>
+        <result name="login">/LoginPage.jsp</result>
+        </action>    
+                <!-- 验证码Action配置 -->     
+        <action name="IdentifyCodeAction" class="IdentifyCodeAction">
+       
+        <result name="success" type="stream">
+        <param name="contentType">image/jpeg</param>
+        <param name="inputName">imageStream</param>
+        </result>
+        </action>                    
+    </package> 
+    
+    
+    <package name="indexPackage" extends="Top" namespace="/order">
+    
+               <action name="HelloWorld" class="HelloWorld">  
+            <result name="success">HelloWorld.jsp</result>  
+        </action>
+        
+         
+          <action name="*Action" class="OrderAction"  method="{1}">  
+            <result name="addOrders">/AddOrdersPage.jsp</result>  
+            <result name="listOrders">/OrdersList.jsp</result>
+             <result name="listPlans">/PlanList.jsp</result>
+            
+            <result name="TdOrders" >/ShowFigure.jsp</result> 
+        </action>      
+        
+        
+        
+              <!-- 增加订单Action -->
+           <action name="AddOrdersAction" class="AddOrdersAction">    
+             <result name="success">/AddOrdersPage.jsp</result> 
+        </action>
+        
+        
+
+        <!-- 查看图片Action -->
+           <action name="ShowFigureAction" class="ShowFigureAction">    
+             <result name="success" type="stream">
+             <param name="contentType">image/jpeg</param>
+            <param name="inputName">imageStream</param>
+            </result> 
+        </action>
+           
+    </package>
+    
+     <package name="employeepack" extends="Top" namespace="/employee"> 
+        
+	     	      	<action name="EmployeeFormAction" class="EmployeeFormAction">
+	      		<result name="success">/AddEmployee.jsp</result>
+	      		<result name="update">/EmployeeUpdate.jsp</result>
+	      	</action>
+           
+       </package>
+       
+       <!-- 人事管理 -->
+       <package name="HRMangement" extends="json-default" namespace="/hrm">
+       <action name="dpHRManAction" class="HRManAction" method="loadDP">
+       <result type="json">
+       <param name="root">dataMap</param>
+       </result>  
+       </action>
+        <action name="empHRManAction" class="HRManAction" method="loadEmp">
+       <result name="LOAD" type="json">
+       <param name="root">employData</param>
+       </result>      
+       </action>
+       <action name="appAccountAction" class="HRManAction" method="appAccount">
+       <result name="appsuccess">/employAppAccount.jsp</result>
+       </action>
+       
+       <action name="organChartAction" class="HRManAction" method="organChart">
+       <result name="success" type="json">
+       <param name="root">objects</param>
+       </result>
+       
+       </action>
+       
+        </package>
+        
+        
+        <!-- 公司管理包 -->
+     <package name="companyMan" extends="json-default" namespace="/man">
+        <!-- 通知Action -->
+        <action name="NoticeAction" class="NoticeAction">
+        <result type="json">
+        <param name="root">notices</param>
+        </result>
+        </action>    
+     
+     </package>
+     
+     <!-- 物资申请 -->
+     <package name="materials" extends="Top" namespace="/materials">
+     <action name="ApproveMaterials" class="MaterialsAction" method="approveMaterials">
+     <result name="success">/ApprovalMaterials.jsp</result>
+     
+     </action>
+     
+     </package>
+     <!-- 个人信息管理 -->
+         <package name="userInfo" extends="Top" namespace="/user">
+        <!-- 通知Action -->
+        <action name="ModifyPwAction" class="UserInfoAction" method="modifyPw">
+        <result name="modify">/ModifyPw.jsp</result>
+        </action> 
+            <action name="PersonalAction" class="UserInfoAction" method="personalInfo">
+        <result name="personalInfo">/MyInfo.jsp</result>
+        </action>     
+     
+     </package>
+     
+    <!-- 消息管理 -->
+    <package name="msg" extends="Top" namespace="/msg">
+    <action name="MyMsgAction" class="MsgAction" method="myMsg">
+    <result name="success">/MyMsg.jsp</result>
+    </action>
+    <action name="ViewMsgAction" class="MsgAction" method="viewMsg">
+    <result name="view">/ViewMsg.jsp</result>
+    </action>
+    
+    <action name="PublishMsgAction" class="MsgAction" method="publishMsg">
+    <result name="success">/publishMsg.jsp</result>
+    </action>
+    </package>
+
+    <package name="aJaxTest"  extends="json-default" namespace="/json">
+		<interceptors>
+			<interceptor-stack name="jsonStack">
+				<interceptor-ref name="json">
+					<param name="enableSMD">true</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="jsonStack" />  
+
+   	 <action name="TestAjaxAction" class="TestAjaxAction">
+        <result  type="json" ><param name="root">sendData</param></result>
+    </action>
+    
+      	 <action name="RowsJsonAction" class="TestAjaxAction" method="rowsJson">
+        <result  type="json" ><param name="root">sendData</param></result>
+    </action>
+    
+         	 <action name="AgreeAction" class="TestAjaxAction" method="agree">
+        <result  type="json" ><param name="root">sendData</param></result>
+    </action>
+    
+             	 <action name="RevokeAction" class="TestAjaxAction" method="revoke">
+        <result  type="json" ><param name="root">sendData</param></result>
+    </action>
+    
+    
+		<action name="writeJSON" class="com.rajesh.json.ReadJSON" method="writeJSON">
+			<result type="json" />
+		</action>
+
+		<action name="readJSON" class="com.rajesh.json.ReadJSON" method="readJSON">
+			<result type="json" />
+		</action>
+       
+  
+     
+    </package>
+    <!-- 文件上传包 -->
+    <package name="upload" extends="json-default" namespace="/upload">
+        <action name="fileUploadAction" class="fileUploadAction">  
+       <param name="savePath">D:/oa</param>   
+        <result type="json">  
+           <param name="root">dataMap</param>  
+         </result>  
+     	</action>
+     	  
+         <action name="FileConvertAction" class="FileConvertAction">  
+        <result type="json">  
+           <param name="root">fileName</param>  
+         </result>  
+     </action> 
+    </package>
+    
+    <package name="file" extends="Top" namespace="/file">
+    <action name="FileDownLoadAction" class="com.latewind.action.FileDownLoadAction" method="download">   
+    <result name="success" type="stream">  
+            
+                <param name="inputName">fileInputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param> 
+                 <param name="contentType">application/octet-stream</param>   
+                <param name="bufferSize">1024</param>  
+            </result>  
+    
+    </action>
+        <action name="ListFilesAction" class="com.latewind.action.FileDownLoadAction" method="listFiles">   
+       <result name="success">/FileDown.jsp</result>
+        </action>
+    
+    </package> 
+    
+    
+</struts>  

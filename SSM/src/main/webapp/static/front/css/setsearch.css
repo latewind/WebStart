@@ -1,0 +1,16 @@
+/* searchbox */
+.searchbox{width:520px;height:80px;margin:40px auto 0 auto;}
+.searchbox ul{ height:35px; width:500px; list-style:none; margin-left:20px}
+.searchbox ul li{ float:left}
+.searchbox ul li a{ float:left; line-height:35px; padding:0 20px; text-decoration:none; color:#000; font-size:14px; font-weight:bold;}
+.searchbox ul li .style1{ background-color:#000; color:#fff}
+.searchbox ul li .style2{ background-color:#f00;color:#fff}
+.searchbox ul li .style3{ background-color:#F90;color:#fff}
+.bodys input{ height:30px;line-height:30px;width:390px;padding:0 10px;float:left;}
+.bodys .one{ border:#000 3px solid}
+.bodys .two{ border:#f00 3px solid}
+.bodys .three{ border:#F90 3px solid}
+.bodys .one1{ background-color:#000; }
+.bodys .two2{ background-color:#f00;}
+.bodys .three3{ background-color:#F90;}
+.bodys button{float:left;border:0;height:36px;width:100px; color:#FFF; line-height:36px;text-align:center;overflow:hidden;}

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.user.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.latewind.pojo.user.UserInfo">
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="nickName" property="nickname" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="actual_name" property="actualName" jdbcType="VARCHAR" />
+		<result column="salt" property="salt" jdbcType="VARCHAR" />
+		<result column="birth_date" property="birthDate" jdbcType="DATE" />
+		<result column="idnumber" property="idnumber" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ResultMapWithBLOBs" type="com.latewind.pojo.user.UserInfo"
+		extends="BaseResultMap">
+		<result column="head" property="head" jdbcType="LONGVARBINARY" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id, user_name, password, tel, sex,
+		nickName,address,actual_name,salt,birth_date,idnumber
+	</sql>
+
+	<sql id="Blob_Column_List">
+		head
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from user_info_t
+		where user_id = #{userId,jdbcType=INTEGER}
+	</select>
+
+
+
+	<select id="selectByUserName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_info_t
+		where user_name = #{userName}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		user_info_t
+		where user_id = #{userId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.latewind.pojo.user.UserInfo">
+		insert into user_info_t
+		(user_id, user_name, password,
+		tel, sex, nickName,salt)
+		values
+		(#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR},
+		#{sex,jdbcType=INTEGER},
+		#{nickname,jdbcType=VARCHAR},#{salt,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.latewind.pojo.user.UserInfo" useGeneratedKeys="true" keyProperty="userId">
+		insert into user_info_t
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="tel != null">
+				tel,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="nickname != null">
+				nickName,
+			</if>
+			<if test="salt != null">
+				salt,
+			</if>
+
+			<if test="idnumber != null">
+				idnumber,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=INTEGER},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="salt != null">
+				#{salt,jdbcType=VARCHAR},
+			</if>
+			<if test="idnumber != null">
+				#{idnumber,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.user.UserInfo">
+		update user_info_t
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="tel != null">
+				tel = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=INTEGER},
+			</if>
+			<if test="nickname != null">
+				nickName = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="actualName != null">
+				actual_name = #{actualName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="birthDate != null">
+				birth_date = #{birthDate,jdbcType=DATE},
+			</if>
+
+			<if test="salt != null">
+				salt = #{salt,jdbcType=VARCHAR},
+			</if>
+
+			<if test="idnumber != null">
+				idnumber = #{idnumber,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="head != null">
+				head = #{head},
+			</if>
+		</set>
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.latewind.pojo.user.UserInfo">
+		update user_info_t
+		set user_name = #{userName,jdbcType=VARCHAR},
+		password =
+		#{password,jdbcType=VARCHAR},
+		tel = #{tel,jdbcType=VARCHAR},
+		sex =
+		#{sex,jdbcType=INTEGER},
+		nickName = #{nickname,jdbcType=VARCHAR},
+
+		actual_name = #{actualName,jdbcType=VARCHAR},
+
+		address =
+		#{address,jdbcType=VARCHAR},
+
+		birth_date = #{birthDate,jdbcType=DATE},
+
+		salt = #{salt,jdbcType=VARCHAR},
+
+		idnumber = #{idnumber,jdbcType=VARCHAR},
+
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+</mapper>

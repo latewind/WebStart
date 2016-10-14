@@ -1,0 +1,28 @@
+文件上传存放在哪里，设置
+
+
+div居中
+
+父辈div 内容设置为align=“center”
+
+文件上传 struts2 maxsize 设置 否则 io异常
+uuid
+
+
+flexpaper 中文路径问题
+
+
+json  -map 遍历解析 ：Notice.jsp  
+
+
+权限控制
+2016-4-13：filter 写法
+
+
+研究项目开精粹里的例子
+
+
+设计范式  适配器
+
+
+2016-4-29 增加Filter过滤机权限验证功能

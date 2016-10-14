@@ -1,0 +1,29 @@
+<taglib
+ xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+ web-jsptaglibrary_2_0.xsd" verson="2.0">
+
+ <tlib-version>1.0</tlib-version>
+ <jspversion>1.1</jspversion>
+<tag>
+        <!-- 标签名 -->
+        <name>AuthorityMan</name>
+        <!-- 标签处理器类-->
+        <tag-class>com.latewind.tags.AuthorityTag</tag-class>
+        <!-- 标签体允许的内容-->
+        <body-content>scriptless</body-content>
+        
+        <!-- 标签的属性描述 -->
+        <attribute>
+            <description>描述标签的count属性</description>
+            <!-- 标签的count属性 -->
+            <name>count</name>
+            <required>true</required>
+            <!-- rtexprvalue用来指示标签的属性值是否可以是一个表达式，
+          	  一般设置为true,true就表示允许标签的属性值可以是一个表达式-->
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+</tag>
+
+</taglib>

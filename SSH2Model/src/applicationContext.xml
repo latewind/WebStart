@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <bean id="dataSource" 
+        class="org.apache.commons.dbcp.BasicDataSource"> 
+         <property name="driverClassName" 
+             value="com.mysql.jdbc.Driver"> 
+         </property> 
+         <property name="url" value="jdbc:mysql://localhost:3306/erp_al?useUnicode=true&amp;characterEncoding=UTF-8"></property> 
+       <property name="username" value="root"/>
+       <property name="password" value="123456"/>
+ </bean>        
+            
+      <bean id="sessionFactory" 
+    class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> 
+        <property name="dataSource"> 
+           <ref bean="dataSource" /> 
+        </property> 
+        <property name="hibernateProperties"> 
+            <props> 
+               <prop key="hibernate.dialect"> 
+                    org.hibernate.dialect.MySQLDialect 
+                 </prop> 
+               <prop key="hibernate.show_sql">true</prop> 
+               <prop key="hibernate.format_sql">false</prop>
+               <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+            </props> 
+        </property> 
+         <property name="mappingResources"> 
+         <list>
+         <value>com/latewind/bean/UserInfo.hbm.xml</value> 
+       	<value>com/latewind/bean/Orders.hbm.xml</value> 
+       	  	<value>com/latewind/bean/Notice.hbm.xml</value> 
+       	  	<value>com/latewind/domain/Department.hbm.xml</value>
+       	  	<value>com/latewind/domain/Employee.hbm.xml</value>
+       	  	<value>com/latewind/domain/Position.hbm.xml</value>
+       	  	<value>com/latewind/domain/Materials.hbm.xml</value>
+       	  	
+       	  	 
+       	  	 <value>com/latewind/domain/Msg.hbm.xml</value>
+         </list>
+         </property> 
+         
+ </bean>     
+  
+   	<!-- 定义HibernateTemplate -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	
+<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+   <property name="sessionFactory">
+       <ref bean="sessionFactory"/>
+
+   </property>
+
+</bean>
+
+
+
+
+
+
+<!-- /////////////////////       配置UserInfoDAO组件            ///////////////////////	 -->
+		<bean id="userInfoDAO" class="com.latewind.dao.UserInfoDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+	</bean> 
+		<!--///////////////////////// 配置service组件//////////////////////// -->   
+		<bean id="userInfoService" class="com.latewind.service.UserInfoServiceImpl">
+		<property name="userInfoDAO">
+			<ref bean="userInfoDAO"/>
+		</property>
+	</bean>
+		
+	<bean id="userInfoServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="userInfoService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+
+	
+	<!-- //////////////////配置OredrsDAO ///////////////////////-->
+		<bean id="ordersDAO" class="com.latewind.dao.OrdersDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+	<bean id="ordersService" class="com.latewind.service.OrdersServiceImpl">
+		<property name="ordersDAO">
+			<ref bean="ordersDAO"/>
+		</property>
+	</bean>
+		<bean id="ordersServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="ordersService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+
+<!-- //////////////////配置NoticeDAO ///////////////////////-->
+
+	<bean id="noticeDAO" class="com.latewind.dao.NoticeDAOImpl">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+	<bean id="noticeService" class="com.latewind.service.NoticeServiceImpl">
+		<property name="noticeDAO">
+			<ref bean="noticeDAO"/>
+		</property>
+	</bean>
+		<bean id="noticeServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="noticeService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+
+<!-- //////////////////配置departmentDAO///////////////////////-->
+	<bean id="departmentDAO" class="com.latewind.domain.DepartmentHome">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+		
+		<!-- //////////////////配置positionDAO///////////////////////-->
+	<bean id="positionDAO" class="com.latewind.domain.PositionHome">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+		
+		<!-- //////////////////配置employeeDAO///////////////////////-->
+	<bean id="employeeDAO" class="com.latewind.domain.EmployeeHome">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+		
+			<!-- //////////////////配置HRService///////////////////////-->
+		<bean id="hrService" class="com.latewind.service.HRServiceImpl">
+		<property name="departmentDAO">
+			<ref bean="departmentDAO"/>
+		</property>
+				<property name="positionDAO">
+			<ref bean="positionDAO"/>
+		</property>
+				<property name="employeeDAO">
+			<ref bean="employeeDAO"/>    
+		</property>		
+						<property name="userInfoDAO">
+			<ref bean="userInfoDAO"/>
+		</property>
+		
+	</bean>
+		<bean id="hrServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="hrService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+		
+	<!-- //////////////////配置materialsDAO///////////////////////-->
+	<bean id="materialsDAO" class="com.latewind.domain.MaterialsHome">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>	
+		
+	
+		
+			<!-- //////////////////配置MaterialsService///////////////////////-->
+		<bean id="materialsService" class="com.latewind.service.MaterialsServiceImpl">
+	
+				<property name="materialsDAO">
+			<ref bean="materialsDAO"/>
+		</property>
+						<property name="employeeDAO">
+			<ref bean="employeeDAO"/>    
+		</property>		
+						<property name="userInfoDAO">
+			<ref bean="userInfoDAO"/>
+		</property>
+		
+		
+	</bean>
+	<bean id="materialsServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="materialsService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean> 
+	
+	<!-- /////////////////////       配置MsgDAO组件            ///////////////////////	 -->
+		<bean id="msgDAO" class="com.latewind.domain.MsgHome">
+		<property name="hibernateTemplate">
+			<ref bean="hibernateTemplate"/>
+		</property>
+		</bean>
+				<!--///////////////////////// 配置service组件//////////////////////// -->   
+		<bean id="msgService" class="com.latewind.service.MsgServiceImpl">
+		<property name="userInfoDAO">
+			<ref bean="userInfoDAO"/>
+		</property>
+				<property name="msgDAO">
+			<ref bean="msgDAO"/>
+		</property>	
+	</bean>
+		<bean id="msgServiceProxy"
+   class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+   <!-- 配置事务管理器 -->
+   <property name="transactionManager">
+    <ref bean="transactionManager" />
+   </property>
+   <!-- 目标bean -->
+   <property name="target">
+    <ref bean="msgService" />
+   </property>
+   <!-- 配置事务属性 -->
+   <property name="transactionAttributes">
+    <props>
+	<prop key="*">PROPAGATION_REQUIRED</prop>
+    </props>
+   </property>
+</bean>
+
+
+
+	   		<!-- /////////////////Test //////////////////////-->	
+		<bean id="test" class="com.latewind.test.Test">
+		<property name="ordersDAO">
+		<ref bean="ordersDAO"/>
+		</property>
+				<property name="userInfoService">
+		<ref bean="userInfoServiceProxy"/>
+		</property>
+		
+				<property name="ordersService">
+		<ref bean="ordersServiceProxy"/>
+		</property>
+		
+						<property name="noticeService">
+		<ref bean="noticeServiceProxy"/>
+		</property>
+		
+					<property name="userInfoDAO">
+		<ref bean="userInfoDAO"/>
+		</property>
+		
+					<property name="hrService">
+		<ref bean="hrServiceProxy"/>
+		</property>
+		
+		
+							<property name="msgService">
+		<ref bean="msgServiceProxy"/>
+		</property>
+		
+		
+		</bean>
+	   
+	  	 <!-- ///////////////IndexAction配置 /////////////////////////-->
+    <bean id="IndexAction" class="com.latewind.action.IndexAction" scope="prototype">
+     <property name="userInfoService">
+    <ref bean="userInfoServiceProxy"/>
+    </property> 
+    </bean>
+	   
+	   
+	   
+ 	 <!-- ///////////////登录Action配置 /////////////////////////-->
+    <bean id="LoginAction" class="com.latewind.action.LoginAction" scope="prototype">
+     <property name="userInfoService">
+    <ref bean="userInfoServiceProxy"/>
+    </property>
+    
+    <property name="userInfoDAO">
+    <ref bean="userInfoDAO"></ref>
+    </property>
+    <property name="ordersDAO">
+		<ref bean="ordersDAO"/>
+		</property>
+    </bean>
+                        <!-- 验证码Action配置 -->
+    <bean id="IdentifyCodeAction" class="com.latewind.action.IdentifyCodeAction" scope="prototype"></bean>
+    
+     
+                        <!-- TestaJaxAction配置 -->
+    <bean id="TestAjaxAction" class="com.latewind.action.TestAjaxAction" scope="prototype">
+    <property name="ordersService">
+		<ref bean="ordersServiceProxy"/>
+		</property>	
+    
+        <property name="materialsService">
+		<ref bean="materialsServiceProxy"/>
+		</property>	
+    </bean>
+    
+                        <!-- FileUponJaxAction配置 -->
+    <bean id="fileUploadAction" class="com.latewind.action.FileUploadAction" scope="prototype">
+    </bean> 
+	         <!-- FileConvertAction配置 -->
+    <bean id="FileConvertAction" class="com.latewind.action.FileConvertAction" scope="prototype">
+    </bean>        
+      <!-- Notice配置 -->
+        <bean id="NoticeAction" class="com.latewind.action.NoticeAction" scope="prototype">
+    </bean> 
+    
+    
+    
+    
+                       <!-- OrderAction配置 -->
+    <bean id="OrderAction" class="com.latewind.action.OrderAction" scope="prototype">
+    			<property name="ordersService">
+		<ref bean="ordersServiceProxy"/>
+		</property>		
+	<property name="userInfoService">
+    <ref bean="userInfoServiceProxy"/>
+    </property>  	   
+    </bean>
+    
+    
+    
+        <!-- OrderAction配置 -->
+    <bean id="AddOrdersAction" class="com.latewind.action.AddOrdersAction" scope="prototype">
+    			<property name="ordersService">
+		<ref bean="ordersServiceProxy"/>
+		</property>		
+	<property name="userInfoService">
+    <ref bean="userInfoServiceProxy"/>
+    </property>  	   
+    </bean>
+    
+      
+            <!-- EmployeeAction配置     --> 
+    <bean id="EmployeeFormAction" class="com.latewind.action.EmployeeFormAction" scope="prototype">
+    			<property name="hrService">
+		<ref bean="hrServiceProxy"/>
+		</property>		  	   
+    </bean>
+    
+             <!-- HRManAction配置     --> 
+    <bean id="HRManAction" class="com.latewind.action.HRManAction" scope="prototype">
+    			<property name="hrService">
+		<ref bean="hrServiceProxy"/>
+		</property>		  	   
+    </bean>
+  
+             <!-- UserInfo配置     --> 
+    <bean id="UserInfoAction" class="com.latewind.action.UserInfoAction" scope="prototype">
+    			<property name="userInfoService">
+		<ref bean="userInfoServiceProxy"/>
+		</property>		  	   
+    </bean>
+    
+        <bean id="MaterialsAction" class="com.latewind.action.MaterialsAction" scope="prototype">
+    			<property name="userInfoService">
+		<ref bean="userInfoServiceProxy"/>
+		</property>		 
+		
+		    	<property name="materialsService">
+		<ref bean="materialsServiceProxy"/>
+		</property>	 	   
+    </bean>
+ 
+     
+    <!-- ShowFigureAction配置 -->
+    <bean id="ShowFigureAction" class="com.latewind.action.ShowFigureAction" scope="prototype">
+    			<property name="ordersService">
+		<ref bean="ordersServiceProxy"/>
+		</property>    	
+    </bean>
+    
+        <!-- MsgAction配置 -->
+    <bean id="MsgAction" class="com.latewind.action.MsgAction" scope="prototype">
+    			<property name="msgService">
+		<ref bean="msgServiceProxy"/>
+		</property>  
+		
+					<property name="userInfoService">
+		<ref bean="userInfoServiceProxy"/>
+		</property>	  	
+    </bean>
+    
+    
+
+</beans>    
+         

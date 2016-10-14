@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.web.NavTabsMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.web.NavTabs" >
+    <id column="nav_id" property="navId" jdbcType="INTEGER" />
+    <result column="nav_name" property="navName" jdbcType="VARCHAR" />
+    <result column="nav_link" property="navLink" jdbcType="VARCHAR" />
+    <result column="nav_status" property="navStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    nav_id, nav_name, nav_link, nav_status, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from nav_t
+    where nav_id = #{navId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllNavtabs" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from nav_t
+  </select> 
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from nav_t
+    where nav_id = #{navId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.web.NavTabs" >
+    insert into nav_t (nav_id, nav_name, nav_link, 
+      nav_status, create_time)
+    values (#{navId,jdbcType=INTEGER}, #{navName,jdbcType=VARCHAR}, #{navLink,jdbcType=VARCHAR}, 
+      #{navStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.web.NavTabs" >
+    insert into nav_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="navId != null" >
+        nav_id,
+      </if>
+      <if test="navName != null" >
+        nav_name,
+      </if>
+      <if test="navLink != null" >
+        nav_link,
+      </if>
+      <if test="navStatus != null" >
+        nav_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="navId != null" >
+        #{navId,jdbcType=INTEGER},
+      </if>
+      <if test="navName != null" >
+        #{navName,jdbcType=VARCHAR},
+      </if>
+      <if test="navLink != null" >
+        #{navLink,jdbcType=VARCHAR},
+      </if>
+      <if test="navStatus != null" >
+        #{navStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.web.NavTabs" >
+    update nav_t
+    <set >
+      <if test="navName != null" >
+        nav_name = #{navName,jdbcType=VARCHAR},
+      </if>
+      <if test="navLink != null" >
+        nav_link = #{navLink,jdbcType=VARCHAR},
+      </if>
+      <if test="navStatus != null" >
+        nav_status = #{navStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where nav_id = #{navId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.web.NavTabs" >
+    update nav_t
+    set nav_name = #{navName,jdbcType=VARCHAR},
+      nav_link = #{navLink,jdbcType=VARCHAR},
+      nav_status = #{navStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where nav_id = #{navId,jdbcType=INTEGER}
+  </update>
+</mapper>

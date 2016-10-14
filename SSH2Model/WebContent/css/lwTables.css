@@ -1,0 +1,66 @@
+@charset "utf-8";
+
+
+
+td{
+white-space: nowrap;
+color:blue;
+    
+}
+
+
+th{
+	white-space: nowrap;
+	color: #004040;
+	border:solid 1px red;
+	background-color:#ff8000;
+}
+tr{
+	background-color:#FCF;
+	text-align:center;
+	}
+
+tbody tr :hover{
+	
+	background-color:#8080c0;	
+}
+.exarea :hover{
+	
+	background-color:white;
+}
+td.input{ position:relative; }
+td input{ width:100%; height:100%;border:1px solid #CF5C74; background:#F90; border-radius:4px; display:block; position:absolute; text-align:center; font-size:14px; left:0; top:0; padding:0px 0; margin:-1px 0 0 -1px; }
+td.hover{background:#eee;}
+
+#temp{
+	
+	text-align:center;
+	color:red;
+	
+}
+span{
+	
+	margin:10px;
+	padding:0px;
+	border:1px;
+	font-size:20px;
+	
+}
+.pageSpan{
+	cursor:pointer;
+	color:#00ff00;			
+}
+.pageSpan:hover{
+	cursor:pointer;
+	background-color:#c0c0c0;
+	
+}
+th:hover{
+	cursor:pointer;
+	background-color:#c0c0c0;
+	
+}
+.pageCurrent{
+
+	background-color:blue;
+}

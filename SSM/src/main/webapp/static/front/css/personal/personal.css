@@ -1,0 +1,20 @@
+.orderdl {
+	margin: 10px;
+}
+
+.orderdl dd {
+	margin: 20px;
+}
+
+.current {
+	color: red;
+	font-weight: bold;
+}
+
+.success {
+	color: #AAAAAA;
+}
+
+body {
+	padding-top: 100px;
+}

@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.product.ProductInfoMapper">
+	<resultMap id="BaseResultMap" type="com.latewind.pojo.product.ProductInfo">
+		<id column="prt_id" property="prtId" jdbcType="INTEGER" />
+		<result column="prt_name" property="prtName" jdbcType="VARCHAR" />
+		<result column="describ" property="describ" jdbcType="VARCHAR" />
+		<result column="third_id" property="thirdId" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="sell_count" property="sellCount" jdbcType="INTEGER" />
+		<result column="click_count" property="clickCount" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="off_shelf" property="offShelf" jdbcType="INTEGER" />
+		<result column="prim_Img_id" property="primImgId" jdbcType="INTEGER" />
+		<association property="primImage"
+			javaType="com.latewind.pojo.product.ProductImages">
+			<id column="image_id" property="imageId" jdbcType="INTEGER" />
+			<result column="image_name" property="imageName" jdbcType="VARCHAR" />
+			<result column="iprt_id" property="prtId" jdbcType="INTEGER" />
+		</association>
+	</resultMap>
+
+	<resultMap id="ColectResultMap" type="com.latewind.pojo.product.ProductInfo">
+		<id column="prt_id" property="prtId" jdbcType="INTEGER" />
+		<result column="prt_name" property="prtName" jdbcType="VARCHAR" />
+		<result column="describ" property="describ" jdbcType="VARCHAR" />
+		<result column="third_id" property="thirdId" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="sell_count" property="sellCount" jdbcType="INTEGER" />
+		<result column="click_count" property="clickCount" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="off_shelf" property="offShelf" jdbcType="INTEGER" />
+		<result column="prim_Img_id" property="primImgId" jdbcType="INTEGER" />
+		<collection property="images"
+			ofType="com.latewind.pojo.product.ProductImages">
+			<id column="image_id" property="imageId" jdbcType="INTEGER" />
+			<result column="image_name" property="imageName" jdbcType="VARCHAR" />
+			<result column="iprt_id" property="prtId" jdbcType="INTEGER" />
+		</collection>
+
+	</resultMap>
+
+
+	<resultMap id="ResultMapWithBLOBs" type="com.latewind.pojo.product.ProductInfo"
+		extends="BaseResultMap">
+		<result column="intro" property="intro" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<resultMap id="CollectResultMapWithBLOBs" type="com.latewind.pojo.product.ProductInfo"
+		extends="ColectResultMap">
+		<result column="intro" property="intro" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+
+	<sql id="Mini_Column_List">
+		prt_id, prt_name, third_id, price, num, sell_count,
+		click_count,
+		create_time,
+		off_shelf
+	</sql>
+
+	<sql id="Base_Column_List">
+		prt_id, prt_name, describ, third_id, price, num,
+		sell_count, click_count,
+		create_time,
+		off_shelf, prim_Img_id
+	</sql>
+	<sql id="Blob_Column_List">
+		intro
+	</sql>
+	<!-- 根据产品ID 查找，只包含主要图片 -->
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as p, prt_images_t as i
+		where p.prt_id
+		=#{prtId,jdbcType=INTEGER} and i.image_id=p.prim_Img_id
+	</select>
+
+
+	<!-- 根据销量查找前十，只包含主要图片 -->
+	<select id="selectBySellTopTen" resultMap="BaseResultMap">
+		select
+		p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as p
+		LEFT
+		JOIN prt_images_t as i on i.image_id=p.prim_Img_id
+		ORDER BY
+		p.sell_count desc
+		LIMIT 5;
+	</select>
+
+
+	<!-- 根据点击量查找前十，只包含主要图片 -->
+	<select id="selectByClickTopTen" resultMap="BaseResultMap">
+		select
+		p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as p
+		LEFT
+		JOIN prt_images_t as i on i.image_id=p.prim_Img_id
+		ORDER BY
+		p.click_count desc
+		LIMIT 5;
+	</select>
+
+
+
+	<!-- 根据产品ID 查找，包含所有图片 -->
+	<select id="selectByPrimaryKey2" resultMap="CollectResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as p, prt_images_t as i
+		where p.prt_id
+		=#{prtId,jdbcType=INTEGER} and i.prt_id=p.prt_id
+	</select>
+	<!-- 根据randomList 查找 随机查找 参数是list 和limit -->
+	<select id="selectRandomByList" resultMap="BaseResultMap">
+		select p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as
+		p, prt_images_t as i
+		where p.prt_id in
+		<foreach collection="randomSet" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and
+		i.image_id=p.prim_Img_id
+		order by field
+		<foreach collection="randomSet" item="item" open="(p.prt_id,"
+			separator="," close=")">
+			#{item}
+		</foreach>
+		limit #{listNum,jdbcType=INTEGER}
+	</select>
+	
+	
+
+	<select id="selectPrtIdByThirdId" resultType="INTEGER">
+		select p.prt_id
+		from product_t p where p.third_id=#{thirdId}
+	</select>
+
+
+	<!-- 根据thirdId 查找所属产品 -->
+	<select id="selectProductByThirdId" resultMap="ResultMapWithBLOBs">
+		select p.*,i.image_id,i.image_name ,i.prt_id iprt_id
+		from product_t as
+		p, prt_images_t as i
+		where p.third_id
+		in
+		<foreach collection="thirdList" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and
+		i.image_id=p.prim_Img_id
+		<choose>
+			<when test="orderDesc !=null and orderDesc=='click'">
+				order by click_count desc
+			</when>
+			<when test="orderDesc !=null and orderDesc=='sell'">
+				order by sell_count desc
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		limit #{startPos} , #{listNum,jdbcType=INTEGER}
+	</select>
+
+
+
+
+	<select id="selectAllPrtId" resultType="Integer">
+		select prt_id from
+		product_t
+	</select>
+
+	<select id="selectAllPrtMini" resultMap="BaseResultMap">
+
+		select
+		<include refid="Mini_Column_List" />
+
+		from product_t
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		product_t
+		where prt_id = #{prtId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.latewind.pojo.product.ProductInfo">
+		insert into product_t (prt_id,
+		prt_name, describ,
+		third_id, price, num, sell_count,
+		click_count,
+		create_time, off_shelf,
+		prim_Img_id, intro)
+		values
+		(#{prtId,jdbcType=INTEGER}, #{prtName,jdbcType=VARCHAR},
+		#{describ,jdbcType=VARCHAR},
+		#{thirdId,jdbcType=INTEGER},
+		#{price,jdbcType=DECIMAL}, #{num,jdbcType=INTEGER},
+		#{sellCount,jdbcType=INTEGER},
+		#{clickCount,jdbcType=INTEGER},
+		#{createTime,jdbcType=DATE}, #{offShelf,jdbcType=INTEGER},
+		#{primImgId,jdbcType=INTEGER}, #{intro,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.latewind.pojo.product.ProductInfo"
+		useGeneratedKeys="true" keyProperty="prtId">
+		insert into product_t
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="prtId != null">
+				prt_id,
+			</if>
+			<if test="prtName != null">
+				prt_name,
+			</if>
+			<if test="describ != null">
+				describ,
+			</if>
+			<if test="thirdId != null">
+				third_id,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+			<if test="sellCount != null">
+				sell_count,
+			</if>
+			<if test="clickCount != null">
+				click_count,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="offShelf != null">
+				off_shelf,
+			</if>
+			<if test="primImgId != null">
+				prim_Img_id,
+			</if>
+			<if test="intro != null">
+				intro,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="prtId != null">
+				#{prtId,jdbcType=INTEGER},
+			</if>
+			<if test="prtName != null">
+				#{prtName,jdbcType=VARCHAR},
+			</if>
+			<if test="describ != null">
+				#{describ,jdbcType=VARCHAR},
+			</if>
+			<if test="thirdId != null">
+				#{thirdId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null">
+				#{num,jdbcType=INTEGER},
+			</if>
+			<if test="sellCount != null">
+				#{sellCount,jdbcType=INTEGER},
+			</if>
+			<if test="clickCount != null">
+				#{clickCount,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+			<if test="offShelf != null">
+				#{offShelf,jdbcType=INTEGER},
+			</if>
+			<if test="primImgId != null">
+				#{primImgId,jdbcType=INTEGER},
+			</if>
+			<if test="intro != null">
+				#{intro,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.product.ProductInfo">
+		update product_t
+		<set>
+			<if test="prtName != null">
+				prt_name = #{prtName,jdbcType=VARCHAR},
+			</if>
+			<if test="describ != null">
+				describ = #{describ,jdbcType=VARCHAR},
+			</if>
+			<if test="thirdId != null">
+				third_id = #{thirdId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="num != null">
+				num = #{num,jdbcType=INTEGER},
+			</if>
+			<if test="sellCount != null">
+				sell_count = #{sellCount,jdbcType=INTEGER},
+			</if>
+			<if test="clickCount != null">
+				click_count = #{clickCount,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			<if test="offShelf != null">
+				off_shelf = #{offShelf,jdbcType=INTEGER},
+			</if>
+			<if test="primImgId != null">
+				prim_Img_id = #{primImgId,jdbcType=INTEGER},
+			</if>
+			<if test="intro != null">
+				intro = #{intro,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where prt_id = #{prtId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.latewind.pojo.product.ProductInfo">
+		update
+		product_t
+		set prt_name = #{prtName,jdbcType=VARCHAR},
+		describ =
+		#{describ,jdbcType=VARCHAR},
+		third_id = #{thirdId,jdbcType=INTEGER},
+		price = #{price,jdbcType=DECIMAL},
+		num = #{num,jdbcType=INTEGER},
+		sell_count = #{sellCount,jdbcType=INTEGER},
+		click_count =
+		#{clickCount,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=DATE},
+		off_shelf = #{offShelf,jdbcType=INTEGER},
+		prim_Img_id = #{primImgId,jdbcType=INTEGER},
+		intro =
+		#{intro,jdbcType=LONGVARCHAR}
+		where prt_id = #{prtId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.latewind.pojo.product.ProductInfo">
+		update product_t
+		set prt_name = #{prtName,jdbcType=VARCHAR},
+		describ =
+		#{describ,jdbcType=VARCHAR},
+		third_id = #{thirdId,jdbcType=INTEGER},
+		price = #{price,jdbcType=DECIMAL},
+		num = #{num,jdbcType=INTEGER},
+		sell_count = #{sellCount,jdbcType=INTEGER},
+		click_count =
+		#{clickCount,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=DATE},
+		off_shelf = #{offShelf,jdbcType=INTEGER},
+		prim_Img_id = #{primImgId,jdbcType=INTEGER}
+		where prt_id =
+		#{prtId,jdbcType=INTEGER}
+	</update>
+	<!-- 点击量自增 -->
+	<update id="updateClickCount" parameterType="java.lang.Integer">
+		UPDATE product_t
+		SET
+		click_count=click_count+1
+		WHERE prt_id =#{prtId}
+	</update>
+
+	<!-- 销量++ -->
+	<update id="updateSellCountPlus">
+		UPDATE product_t
+		SET sell_count=sell_count + #{count}
+		WHERE prt_id =#{prtId}
+	</update>
+
+
+	<!-- 库存++ -->
+	<update id="updateStockPlus">
+		UPDATE product_t
+		SET num=num + #{count}
+		WHERE prt_id
+		=#{prtId}
+	</update>
+
+
+	<!-- 库存 -->
+	<update id="updateStockMinus">
+		UPDATE product_t
+		SET num = num - #{count}
+		WHERE prt_id
+		= #{prtId} and num > #{count}
+	</update>
+
+
+</mapper>

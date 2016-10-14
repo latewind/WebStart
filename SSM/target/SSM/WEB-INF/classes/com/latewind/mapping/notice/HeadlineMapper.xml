@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.notice.HeadlineMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.notice.Headline" >
+    <id column="headline_id" property="headlineId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="page_link" property="pageLink" jdbcType="VARCHAR" />
+    <result column="display_time" property="displayTime" jdbcType="TIMESTAMP" />
+    <result column="show_status" property="showStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    headline_id, title, content, page_link, display_time, show_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from headline_t
+    where headline_id = #{headlineId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCurrentHeadline" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from headline_t
+    where show_status = 1 limit 1
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from headline_t
+    where headline_id = #{headlineId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.latewind.pojo.notice.Headline" >
+    insert into headline_t (headline_id, title, content, 
+      page_link, display_time, show_status
+      )
+    values (#{headlineId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{pageLink,jdbcType=VARCHAR}, #{displayTime,jdbcType=TIMESTAMP}, #{showStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.notice.Headline" >
+    insert into headline_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="headlineId != null" >
+        headline_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="pageLink != null" >
+        page_link,
+      </if>
+      <if test="displayTime != null" >
+        display_time,
+      </if>
+      <if test="showStatus != null" >
+        show_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="headlineId != null" >
+        #{headlineId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="pageLink != null" >
+        #{pageLink,jdbcType=VARCHAR},
+      </if>
+      <if test="displayTime != null" >
+        #{displayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showStatus != null" >
+        #{showStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.latewind.pojo.notice.Headline" >
+    update headline_t
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="pageLink != null" >
+        page_link = #{pageLink,jdbcType=VARCHAR},
+      </if>
+      <if test="displayTime != null" >
+        display_time = #{displayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showStatus != null" >
+        show_status = #{showStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where headline_id = #{headlineId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.latewind.pojo.notice.Headline" >
+    update headline_t
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      page_link = #{pageLink,jdbcType=VARCHAR},
+      display_time = #{displayTime,jdbcType=TIMESTAMP},
+      show_status = #{showStatus,jdbcType=INTEGER}
+    where headline_id = #{headlineId,jdbcType=INTEGER}
+  </update>
+</mapper>

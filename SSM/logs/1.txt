@@ -1,0 +1,9 @@
+    <!-- 根据用户ID lst 所有订单商品 -->
+  <select id="selectOrdersByUserName" resultMap="OrderResultMap" parameterType="java.lang.Integer">
+    select o.* ,c.cart_product_id,c.prt_id cprt_id,quantity ,
+		p.prt_id,p.prt_name,p.price,p.num,i.image_id,i.image_name ,i.prt_id iprt_id
+    from 
+    	order_t o inner join cart_product_t c  on o.order_id in (1,2,3,5,9,6)  and c.order_id=o.order_id
+    					 inner join product_t   p  on   p.prt_id=c.prt_id
+    					 inner join prt_images_t i  on i.image_id=p.prim_Img_id
+  </select>

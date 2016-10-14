@@ -1,0 +1,59 @@
+.classdiv {
+	font-family: "宋体";
+	font-size: 12px;
+	background-attachment: fixed;
+	background-color: #99FF00;
+	background-repeat: no-repeat;
+	background-position: center;
+	position: static;
+	visibility: visible;
+}
+#footerdiv {
+	height: 76px;
+	width: auto;
+	background-color: #009999;
+}
+.inputclass {
+	
+}
+
+
+#headerdiv{
+	background-attachment: fixed;
+	background-image: url(../images/u=3922277475,817684749&fm=21&gp=0.jpg);
+	background-repeat: repeat-x;
+	background-position: left;
+	position: static;
+	height: 150px;
+	width: auto;
+	margin-bottom: 20px;
+
+}
+#formdiv {
+	position: relative;
+	width: 300px;
+	background-color: #ffffff;	
+	vertical-align: middle;
+	text-align: center;
+	overflow: visible;
+	height: 290px;
+	top:23%;
+	border:2px solid #a1a1a1;
+	
+	float: none;
+	right: auto;
+	bottom: auto;
+}
+table{
+background-color: #e1fdff;	
+border-radius:25px;
+	
+}
+
+#logindiv {
+	position: static;
+	height: 450px;
+	width: auto;
+	background-color: #0099FF;
+
+}

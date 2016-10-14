@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.latewind.dao.product.KeyWordMapper" >
+  <resultMap id="BaseResultMap" type="com.latewind.pojo.product.KeyWord" >
+    <result column="key_word" property="keyWord" jdbcType="VARCHAR" />
+    <result column="prt_id" property="prtId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <select id="selectByKeyWord" resultType="INTEGER">
+  select key_word_t.prt_id from key_word_t where 
+  
+ 	<foreach collection="keywordSet" item="item"
+			separator="or" >
+			key_word like "%"#{item}"%"
+		</foreach>
+		group by prt_id
+  </select>
+  
+  <insert id="insert" parameterType="com.latewind.pojo.product.KeyWord" >
+    insert into key_word_t (key_word, prt_id)
+    values (#{keyWord,jdbcType=VARCHAR}, #{prtId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.latewind.pojo.product.KeyWord" >
+    insert into key_word_t
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="keyWord != null" >
+        key_word,
+      </if>
+      <if test="prtId != null" >
+        prt_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="keyWord != null" >
+        #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="prtId != null" >
+        #{prtId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
